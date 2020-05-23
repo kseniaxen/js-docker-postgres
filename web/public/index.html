@@ -1,11 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+	<meta charset="utf-8">
+	<title>My Site</title>
+	<!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
-  Hello World from Static!
+	<header>
+		
+	</header>
+	
+	<section>
+		<div id="productsContainer" class="container">
+      <div class="row"></div>
+    </div>
+
+      	<div id="newProductModal" class="modal">
+      		<div class="row">
+      			<h6>Add a new product</h6>
+      		</div>
+      		<div class="row">
+      			<form class="col s12">
+      				<div class="row">
+      					<div class="input-field col s12 xl6">
+				          <input placeholder="Title" id="title" type="text" class="validate">
+				          <label for="title">Title</label>
+				        </div>
+				        <div class="input-field col s12 xl6">
+				          <input placeholder="Description" id="description" type="text" class="validate">
+				          <label for="description">Description</label>
+				        </div>
+      				</div>
+					  <button class="btn waves-effect waves-light yellow darken-1" type="submit" name="action">Submit
+					    <i class="material-icons right">send</i>
+					  </button>
+      			</form>
+      		</div>
+      	</div>
+
+		<!-- <div id="addProductButton" class="fixed-action-btn">
+		  <a href="#" data-target="slide-out" class="btn-floating btn-large green sidenav-trigger">
+		    <i class="large material-icons">add</i>
+		  </a>
+		</div> -->
+		<div id="addProductButton" class="fixed-action-btn">
+		  <a href="#newProductModal" class="btn-floating btn-large green modal-trigger">
+		    <i class="large material-icons">add</i>
+		  </a>
+		</div>
+	</section>
+
+	<footer>
+		
+	</footer>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="js/hogan-3.0.2.min.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
