@@ -1,6 +1,6 @@
 # Example Express + Postgresql + Docker
 
-*html, css, materializecss, browser javascript, Node.js + Express, Postgresql, Docker, Docker Compose*
+*html, css, materializecss, browser javascript, hogan.js, ImageTools.js, Node.js + Express, Postgresql, Docker, Docker Compose*
 
 * start
 docker-compose up
