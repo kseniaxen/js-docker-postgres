@@ -1,4 +1,5 @@
-.card-image{
+/* Стиль для изображения внутри карточки materialize css */
+.card-image {
   height: 400px;
   overflow: hidden
 }
