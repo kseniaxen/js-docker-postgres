@@ -23,4 +23,6 @@ services:
       DB_USER: postgres
       DB_NAME: postgres
       DB_PASSWORD: 1
+      WEB_HOST: 0.0.0.0
+      WEB_PORT: 8080
     command: ["./wait-for-it.sh", "db:5432", "--", "node", "app.js"]

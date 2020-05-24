@@ -4,3 +4,4 @@ build/
 */.env
 */.DS_Store
 db/data/
+web/package-lock.json

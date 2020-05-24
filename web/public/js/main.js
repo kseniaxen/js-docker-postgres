@@ -1,41 +1,27 @@
-// Получение управления элементом разметки с идентификатором
-// "addProductButton" (главная плавающая кнопка)
-// без указания селектора, а напрямую по идентификатору
-// +
-// установка обработчика события Клик
-/* addProductButton.onclick = function() {
-	alert('You clicked a floating button');
-} */
+// 
 document.addEventListener('DOMContentLoaded', function() {
+  // 
+  const baseRestApiUrl = 'http://localhost:4000/'
   // Создание отладочной переменной, содержащей
   // массив демонстрационных моделей с данными для карточек
   let products = {
-    data: [
-      {
-        "id":1,
-        "title":"orcl",
-        "description":"I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.",
-        "price":"49.99",
-        "quantity":50
-      },
-      {
-        "id":2,
-        "title":"msft",
-        "description":"I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.",
-        "price":"99.99",
-        "quantity":30
-      }
-    ]
+    data: []
   }
+  
   // Определение функции рисования всех карточек
-  function renderProducts(products) {
+  function renderProducts (products) {
     //Готовим шаблон списка при помощи библиотеки Hogan
     let template = Hogan.compile(
       `{{#data}}
         <div class="col s12 xl6">
           <div class="card">
             <div class="card-image">
-              <img src="../images/image_1.jpeg">
+              {{#image}}
+                <img src="{{image}}">
+              {{/image}}
+              {{^image}}
+                <img src="../images/image_1.jpeg">
+              {{/image}}
               <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
             </div>
             <div class="card-content">
@@ -53,26 +39,87 @@ document.addEventListener('DOMContentLoaded', function() {
     container.innerHTML = template.render(products)
   }
   // 
-  renderProducts(products)
-
-	const modal = document.querySelectorAll('.modal')
-    const instances = M.Modal.init(modal, {})
-
-    const submit = document.querySelector('#newProductModal form button')
-    // console.log(submit)
-    submit.onclick = function(eventArgs){
-    	// console.log(title.value)
-      // console.log(description.value)
-      eventArgs.preventDefault()
-      products.data.unshift(
-        {
-          "id": -1,
-          "title": title.value,
-          "description": description.value,
-          "price": "00.00",
-          "quantity": 0
-        }
-      )
-      renderProducts(products)
+  function fetchProducts () {
+    // 
+    const url = baseRestApiUrl + 'api/product'
+    const requestData = {
+      method: 'GET'
     }
+    const request = new Request(url, requestData)
+    fetch(request).then(function (response) {
+      return response.json()
+    }).then(function (response) {
+      if (response.data && response.data.length > 0) {
+        // Если очередная порция данных пришла не пустой -
+        // пополняем ею массив локального состояния
+        products.data = response.data
+        // 
+        renderProducts(products)
+      }
+    }).catch(function (e) {
+      alert('Products fetching error: ' + e)
+    })
+  }
+  // 
+  fetchProducts()
+  // 
+	const modal = document.querySelectorAll('.modal')
+  const instances = M.Modal.init(modal, {})
+  // 
+  let imageBase64 = ''
+  image.onchange = function (ev) {
+    //console.log($('form#create-offer-form input#image-input'));
+    const file = ev.target.files[0];
+    // 
+    ImageTools.resize(file, {
+        width: 300, // maximum width
+        height: 300 // maximum height
+      }, function(blob, didItResize) {
+       // didItResize will be true if it managed to resize it, otherwise false
+       // (and will return the original file as 'blob')
+       var reader = new FileReader()
+       reader.onloadend = function() {
+        imageBase64 = reader.result
+        preview.setAttribute('src', imageBase64)
+       }
+       reader.readAsDataURL(blob);
+      })
+  }
+  const submit = document.querySelector('#newProductModal form button')
+  // console.log(submit)
+  submit.onclick = function(eventArgs){
+    // 
+    eventArgs.preventDefault()
+    // 
+    const newProduct = {
+      "title": title.value,
+      "description": description.value,
+      "price": 0,
+      "quantity": 0,
+      "image": imageBase64
+    }
+    const url = baseRestApiUrl + 'api/product'
+    const requestData = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newProduct)
+    }
+    const request = new Request(url, requestData)
+    fetch(request).then(function (response) {
+      return response.status
+    }).then(function (status) {
+      if (status == 201) {
+        // Если очередная порция данных пришла не пустой -
+        // пополняем ею массив локального состояния
+        fetchProducts()
+      } else {
+        alert('Product creating error')
+      }
+    }).catch(function (e) {
+      alert('Products creating error: ' + e)
+    })
+  }
 })
