@@ -3,7 +3,7 @@
 // "когда загрузка документа в браузер завершена"
 document.addEventListener('DOMContentLoaded', function() {
   // основной адрес серверной логики
-  const baseRestApiUrl = 'http://localhost:4000/'
+  const baseRestApiUrl = '/'
   // массив для хранения локального списка моделей с данными о товарах
   let products = {
     data: []

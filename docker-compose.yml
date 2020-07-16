@@ -16,7 +16,7 @@ services:
     build: ./web
     # image: tyaa/node-app:1.0
     ports:
-      - "4000:8080"
+      - "10.10.212.134:4000:8080"
     environment:
       DB_HOST: db
       DB_PORT: 5432
