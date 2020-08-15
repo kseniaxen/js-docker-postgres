@@ -3,7 +3,7 @@
 // "когда загрузка документа в браузер завершена"
 document.addEventListener('DOMContentLoaded', function() {
   // основной адрес серверной логики
-  const baseRestApiUrl = '/'
+  //const baseRestApiUrl = '/'
   // массив для хранения локального списка моделей с данными о товарах
   let products = {
     data: []
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
               {{^image}}
                 <img src="../images/image_1.jpeg">
               {{/image}}
-              <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+              <a data-productid={{id}} class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">delete</i></a>
             </div>
             <div class="card-content">
               <span class="card-title">{{title}}</span>
@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
           </div>
         </div>
+        {{/data}}
+        {{^data}}
+          Product List is Empty
       {{/data}}`
     )
     // Находим элемент основной разметки, внутрь которого нужно поместить
@@ -37,11 +40,40 @@ document.addEventListener('DOMContentLoaded', function() {
     let container = document.querySelector('#productsContainer > .row')
     // Заполняем шаблон данными и помещаем результат на веб-страницу
     container.innerHTML = template.render(products)
+    document.querySelectorAll('.card a').forEach(deleteButton => {
+      deleteButton.onclick = (ev) => {
+        ev.preventDefault()
+        // адрес конечной точки Товар на серверной логике
+        const url = 'api/product/' + deleteButton.dataset.productid
+        // заголовки для запроса по сети
+        const requestData = {
+          method: 'DELETE'
+        }
+        // объект запроса по сети
+        const request = new Request(url, requestData)
+        // выполнение запроса по сети: получить список описаний всех товаров
+        fetch(request).then(function (response) {
+          // из полученного отклика сервера извлечь код статуса
+          // и передать для дальнейшей обработки
+          return response.status
+        }).then(function (statusCode) {
+          // если в объекте отклика код статуса равен "no content"
+          if (statusCode == 204) {
+            // вызов функции получения массива описаний товаров
+            fetchProducts()
+          }
+        }).catch(function (e) {
+          // выводим окно сообщения об ошибке
+          alert('Products fetching error: ' + e)
+        })
+      }
+    })
   }
   // Определение функции получения данных и запуска рисования всех карточек
   function fetchProducts () {
     // адрес конечной точки Товар на серверной логике
-    const url = baseRestApiUrl + 'api/product'
+    //const url = baseRestApiUrl + 'api/product'
+    const url = 'api/product'
     // заголовки для запроса по сети
     const requestData = {
       method: 'GET'
@@ -56,7 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }).then(function (response) {
       // если в распакованном объекте отклика есть непустой ключ data
       // и длинна массива в его значении - не нулевая
-      if (response.data && response.data.length > 0) {
+      //if (response.data && response.data.length > 0) {
+        if (response.data){
         // переменной локального массива присваивается массив описаний товаров,
         // полученный от серверной логики
         products.data = response.data
@@ -118,7 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
       "image": imageBase64
     }
     // адрес конечной точки серверной логики для добавления описания нового товара
-    const url = baseRestApiUrl + 'api/product'
+   // const url = baseRestApiUrl + 'api/product'
+    const url = 'api/product'
     // заголовки запроса отправки данных:
     // тип запроса - POST - для размещения данных в теле запроса,
     // формат отправляемых и получаемых данных - json - для корректного чтения их серверной логикой,
